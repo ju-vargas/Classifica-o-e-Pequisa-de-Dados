@@ -168,10 +168,11 @@ loginfo_t shellsort(array_t array, array_size_t array_size){
             comparacoes++;                                                  //comparo array[i] com chave abaixo
             while (i>=0 && array[i]>chave) {
                 array[i+h] = array[i];
-                trocas+=2;                                                  //pois ja conto a troca de [i+h] com a chave. nao considero troca se é igual
+                trocas++;                                                  
                 i = i-h;
             } 
             array[i+h] = chave;
+            trocas++;
         }
         /* para ver visualmente como está ordenando
         cout << "\n"; 
