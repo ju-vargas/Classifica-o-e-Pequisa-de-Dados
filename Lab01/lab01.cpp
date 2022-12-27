@@ -39,15 +39,15 @@ int main(void){
     int* array = new int[MAX];                                                  // array dinâmico que armazena os números
 
     // testar com as 3 versões de array (aleatório, crescente e decrescente):
-    for(auto i=0;i<MAX;i++) array[i] = distrib(rng)%51;                         // gera números aleatórios para o array
+    //for(auto i=0;i<MAX;i++) array[i] = distrib(rng)%51;                         // gera números aleatórios para o array
     //for(auto i=0;i<MAX;i++) array[i] = i;                                     // gera números em ordem crescente
-    //for(auto i=0;i<MAX;i++) array[i] = MAX-i;                                   // gera números em ordem decrescente
+    for(auto i=0;i<MAX;i++) array[i] = MAX-i;                                   // gera números em ordem decrescente
 
     cout << "Array gerado: ";
     for(auto i=0;i<MAX;i++) cout << array[i] << " ";
 
     // TODO: testar os outros algoritmos (insertion_sortBB e shellsort)
-    loginfo = insertion_sortBB(array, MAX);
+    loginfo = shellsort(array, MAX);
 
     //TODO: armazenar essas informações em um matriz ou hashtable
 
@@ -151,8 +151,39 @@ std::tuple<int, int, int> busca_binaria(array_t array, int elemento, int inicio,
 
 loginfo_t shellsort(array_t array, array_size_t array_size){
     int trocas = 0, comparacoes = 0;
+    int h = 1; 
+    int k = 1; 
+    int chave, i; 
 
-    // defina aqui sua versão da função shellsort    
+    //gap h baseado no algoritmo de Knuth O (n^3/2)
+    while (h < array_size) {
+        h =  (pow(3,k) - 1)/2; 
+        k++; 
+    }
+    while (h>0) {
 
+        for (int j = h; j<array_size; j++) {
+            chave = array[j]; 
+            i = (j-h);
+            comparacoes++;                                                  //comparo array[i] com chave abaixo
+            while (i>=0 && array[i]>chave) {
+                array[i+h] = array[i];
+                trocas+=2;                                                  //pois ja conto a troca de [i+h] com a chave. nao considero troca se é igual
+                i = i-h;
+            } 
+            array[i+h] = chave;
+        }
+        /* para ver visualmente como está ordenando
+        cout << "\n"; 
+        for (int u=0; u<array_size; u++) {
+            if(u%h == 0)
+                cout << "|"<< array[u] <<"|";
+            else 
+                cout << " "<< array[u] <<" ";
+        }
+        cout << "\n"; 
+        */
+        h = (h+1)/3;
+    }
     return make_tuple(trocas, comparacoes);                                     // retorna quantidade de operações
 }
