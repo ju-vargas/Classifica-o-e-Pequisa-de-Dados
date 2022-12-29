@@ -30,12 +30,10 @@ int main(void){
     uniform_int_distribution<> distrib(0, INT_MAX);                             // cria gerador com distribuição uniforme entre 0 e MAX_INT
     loginfo_t loginfo;                                                          // armazena contadores de comparações e trocas (ver typedef acima)
 
-    int MAX = 50; 
-    int* array = new int[MAX];                                                  // array dinâmico que armazena os números
     loginfo_teste* array_teste = new loginfo_teste[27];
 
 
-    MAX = 10;
+    int MAX = 10;
     int j = 0; 
         for (int u = 0; u < 3; u++) { 
             int* array = new int[MAX]; 
