@@ -28,6 +28,9 @@ MyRNG rng;                                                                      
 uint32_t seed_val;                                                              // semente de geração de números
 
 void bubblesort(array_t, array_size_t, loginfo_t&);
+void combsort(array_t, array_size_t, loginfo_t&);
+void shakesort(array_t, array_size_t, loginfo_t&);
+
 void quicksort(array_t, int, int, loginfo_t&);
 int particiona(array_t array, int i, int f, loginfo_t&);
 void swap(int *n1, int *n2);
@@ -39,8 +42,6 @@ int main(void){
     loginfo_t loginfo;                                                          // armazena contadores de comparações e trocas (ver typedef acima)
     loginfo_teste* array_teste = new loginfo_teste[16];                         // armazena informações de teste 
     int* array = new int[MAX];                                                  // array dinâmico que armazena os números
-
- 
 
 /*
 
@@ -131,9 +132,9 @@ int main(void){
 
     //PARTE INDIVIDUAL/ORIGINAL DO CÓDIGO 
 
-    //for(auto i=0;i<MAX;i++) array[i] = distrib(rng)%71;                         // gera números em ordem aleatória
+    for(auto i=0;i<MAX;i++) array[i] = distrib(rng)%71;                         // gera números em ordem aleatória
     //for(auto i=0;i<MAX;i++) array[i] = i;                                       // gera números em ordem crescente
-    for(auto i=0;i<MAX;i++) array[i] = MAX-i;                                   // gera números em ordem decrescente
+    //for(auto i=0;i<MAX;i++) array[i] = MAX-i;                                   // gera números em ordem decrescente
     //for(auto i=0;i<MAX;i++) array[i] = MAX;                                     // gera números iguais
 
 
@@ -145,7 +146,9 @@ int main(void){
     //PARTE Q FAZ TESTES SEPARADAMENTE 
     auto start = std::chrono::steady_clock::now();
     //bubblesort(array, MAX, loginfo);                                         // passa tamanho do array
-    quicksort(array, 0, MAX-1, loginfo);                                      // passa início e fim do trecho de processamento (MAX-1)
+    shakesort(array, MAX, loginfo); 
+    //shakesort(array, MAX, loginfo); 
+    //quicksort(array, 0, MAX-1, loginfo);                                      // passa início e fim do trecho de processamento (MAX-1)
     auto finish = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = finish - start;
     
@@ -175,7 +178,6 @@ void quicksort(array_t array, int i, int f, loginfo_t& loginfo){
 		  quicksort(array, i, p-1, loginfo);            //lado esquerdo do array, p é o meio
 		  quicksort(array, p+1, f, loginfo);            //lado direito do array, p é o meio 
 	}                                                   //faço pras novas metades
-
 }
 
 int particiona(array_t array, int esq, int dir, loginfo_t& loginfo){
@@ -243,6 +245,83 @@ void bubblesort(array_t array, array_size_t array_size, loginfo_t& loginfo){
         qtd_elementos = pos_troca;                
     }
 
+    get<0>(loginfo)=trocas;
+    get<1>(loginfo)=comparacoes;
+}
+
+// COMBSORT 
+void combsort(array_t array, array_size_t array_size, loginfo_t& loginfo){
+    int trocas = 0;
+    int comparacoes = 0;
+    int pos_troca = 0;
+
+    bool troca = true;
+    
+    int qtd_elementos = array_size-1;
+    float fator = 1.3; 
+    int gap = qtd_elementos; 
+
+    get<0>(loginfo) = 0; 
+    get<1>(loginfo) = 0; 
+
+    while(gap > 1 || troca){
+        gap = gap / fator;
+
+        if (gap < 1){
+            gap = 1; 
+        }
+        troca = false; 
+
+        for(auto i=0; i+gap<array_size;i++){ 
+            comparacoes = comparacoes + 1;
+            if( array[i] > array[i+gap]){
+                swap(array[i], array[i+gap]);
+                troca = true;
+                trocas = trocas + 1;
+            }
+        }
+    }
+
+    get<0>(loginfo)=trocas;
+    get<1>(loginfo)=comparacoes;
+}
+
+// SHAKESORT 
+void shakesort(array_t array, array_size_t array_size, loginfo_t& loginfo){
+    int trocas = 0;
+    int comparacoes = 0;
+
+    int qtd_elementos = array_size-1;
+    
+    int esq = 0; 
+    int dir = qtd_elementos; 
+    bool troca = true;
+
+    get<0>(loginfo) = 0; 
+    get<1>(loginfo) = 0; 
+
+    while(troca && esq<dir){
+        troca = false;
+        for(auto i=esq; i<dir;i++){ 
+            comparacoes = comparacoes + 1;
+            if( array[i] > array[i+1]){        
+                swap(array[i], array[i+1]);
+                troca = true;
+                trocas++;
+            }
+        }
+        dir--; 
+
+        for(auto i=dir; i>esq;i--){ 
+            comparacoes = comparacoes + 1;
+            if( array[i] < array[i-1]){
+                swap(array[i], array[i-1]);
+                troca = true;
+                trocas++;
+            }
+        }
+    esq++; 
+    }
     get<0>(loginfo)=trocas;
     get<1>(loginfo)=comparacoes;
 }
