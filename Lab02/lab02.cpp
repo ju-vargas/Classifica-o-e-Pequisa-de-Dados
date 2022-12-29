@@ -21,7 +21,7 @@ typedef std::tuple<int, int> loginfo_t;                                         
 typedef std::tuple<std::string, int, int, std::chrono::duration<double>> loginfo_teste;                // armazena <tipo, trocas , comparacoes, tempo>
 typedef std::mt19937 MyRNG;                                                     // Gerador de números aleatórios do tipo Mersenne Twister Random Generator 
 
-#define MAX 10 
+//#define MAX 10 
 
 
 MyRNG rng;                                                                      // gerador de números aleatórios
@@ -40,10 +40,12 @@ int main(void){
     uniform_int_distribution<> distrib(0, INT_MAX);                             // cria gerador com distribuição uniforme entre 0 e MAX_INT
 
     loginfo_t loginfo;                                                          // armazena contadores de comparações e trocas (ver typedef acima)
-    loginfo_teste* array_teste = new loginfo_teste[16];                         // armazena informações de teste 
-    int* array = new int[MAX];                                                  // array dinâmico que armazena os números
+    loginfo_teste* array_teste = new loginfo_teste[32];                         // armazena informações de teste 
 
-/*
+    auto start = std::chrono::steady_clock::now();
+    auto finish = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds;
+
 
     int MAX = 10; 
     int j = 0; 
@@ -51,63 +53,89 @@ int main(void){
         int* array = new int[MAX];                                                  // array dinâmico que armazena os números
 
         //aleatorio
-        get<0>(loginfo) = 0; 
-        get<1>(loginfo) = 0;
         for(auto i=0;i<MAX;i++) array[i] = distrib(rng)%51;                         // gera números em ordem aleatória
         start = std::chrono::steady_clock::now();
-        quicksort(array, 0, MAX-1, loginfo); 
+        combsort(array, MAX, loginfo); 
         finish = std::chrono::steady_clock::now();
-        std::chrono::duration<double> elapsed_seconds = finish - start;
-        get<0>(array_teste[j]) = "ALEATORIO - Quicksort"; 
+        elapsed_seconds = finish - start;
+        get<0>(array_teste[j]) = "ALEATORIO - CombSort"; 
+        get<1>(array_teste[j]) = get<0>(loginfo);
+        get<2>(array_teste[j]) = get<1>(loginfo);
+        get<3>(array_teste[j++]) = elapsed_seconds;
+
+        for(auto i=0;i<MAX;i++) array[i] = distrib(rng)%51;                         // gera números em ordem aleatória
+        start = std::chrono::steady_clock::now();
+        shakesort(array, MAX, loginfo); 
+        finish = std::chrono::steady_clock::now();
+        elapsed_seconds = finish - start;
+        get<0>(array_teste[j]) = "ALEATORIO - ShakeSort"; 
         get<1>(array_teste[j]) = get<0>(loginfo);
         get<2>(array_teste[j]) = get<1>(loginfo);
         get<3>(array_teste[j++]) = elapsed_seconds;
 
 
         //crescente
-        get<0>(loginfo) = 0; 
-        get<1>(loginfo) = 0;
         for(auto i=0;i<MAX;i++) array[i] = i;
         start = std::chrono::steady_clock::now();
-        quicksort(array, 0, MAX-1, loginfo); 
+        combsort(array, MAX, loginfo);  
         finish = std::chrono::steady_clock::now();
         elapsed_seconds = finish - start;
-        get<0>(array_teste[j]) = "CRESCENTE - Quicksort"; 
+        get<0>(array_teste[j]) = "CRESCENTE - Combsort"; 
         get<1>(array_teste[j]) = get<0>(loginfo);
         get<2>(array_teste[j]) = get<1>(loginfo);
         get<3>(array_teste[j++]) = elapsed_seconds;
 
-
+        for(auto i=0;i<MAX;i++) array[i] = i;
+        start = std::chrono::steady_clock::now();
+        combsort(array, MAX, loginfo);  
+        finish = std::chrono::steady_clock::now();
+        elapsed_seconds = finish - start;
+        get<0>(array_teste[j]) = "CRESCENTE - Shakesort"; 
+        get<1>(array_teste[j]) = get<0>(loginfo);
+        get<2>(array_teste[j]) = get<1>(loginfo);
+        get<3>(array_teste[j++]) = elapsed_seconds;
 
         //decrescente
-        get<0>(loginfo) = 0; 
-        get<1>(loginfo) = 0;
         for(auto i=0;i<MAX;i++) array[i] = MAX-i; 
         start = std::chrono::steady_clock::now();
-        quicksort(array, 0, MAX-1, loginfo); 
+        combsort(array, MAX, loginfo);  
         finish = std::chrono::steady_clock::now();
         elapsed_seconds = finish - start;
-        get<0>(array_teste[j]) = "DECRESCENTE - QuickSort"; 
+        get<0>(array_teste[j]) = "DECRESCENTE - Combsort"; 
         get<1>(array_teste[j]) = get<0>(loginfo);
         get<2>(array_teste[j]) = get<1>(loginfo);
         get<3>(array_teste[j++]) = elapsed_seconds;
 
-
+        for(auto i=0;i<MAX;i++) array[i] = MAX-i; 
+        start = std::chrono::steady_clock::now();
+        combsort(array, MAX, loginfo);  
+        finish = std::chrono::steady_clock::now();
+        elapsed_seconds = finish - start;
+        get<0>(array_teste[j]) = "DECRESCENTE - Shakesort"; 
+        get<1>(array_teste[j]) = get<0>(loginfo);
+        get<2>(array_teste[j]) = get<1>(loginfo);
+        get<3>(array_teste[j++]) = elapsed_seconds;
 
         //identico
-        get<0>(loginfo) = 0; 
-        get<1>(loginfo) = 0;
         for(auto i=0;i<MAX;i++) array[i] = MAX; 
         start = std::chrono::steady_clock::now();
-        quicksort(array, 0, MAX-1, loginfo); 
+        combsort(array, MAX, loginfo);  
         finish = std::chrono::steady_clock::now();
         elapsed_seconds = finish - start;
-        get<0>(array_teste[j]) = "IDENTICO - QuickSort"; 
+        get<0>(array_teste[j]) = "IDENTICO - Combsort"; 
         get<1>(array_teste[j]) = get<0>(loginfo);
         get<2>(array_teste[j]) = get<1>(loginfo);
         get<3>(array_teste[j++]) = elapsed_seconds;
 
-    
+        for(auto i=0;i<MAX;i++) array[i] = MAX; 
+        start = std::chrono::steady_clock::now();
+        combsort(array, MAX, loginfo);  
+        finish = std::chrono::steady_clock::now();
+        elapsed_seconds = finish - start;
+        get<0>(array_teste[j]) = "IDENTICO - Shakesort"; 
+        get<1>(array_teste[j]) = get<0>(loginfo);
+        get<2>(array_teste[j]) = get<1>(loginfo);
+        get<3>(array_teste[j++]) = elapsed_seconds;
 
         delete[] array; 
         MAX = MAX*10; 
@@ -120,16 +148,17 @@ int main(void){
     for (int x = 0; x < 4; x++) {      
         cout << "\n\nTamanho: "<<tamanho << "\n"; 
 
-        for (int i = 0; i<4; i++){
-            cout << get<0>(array_teste[i + 4*x]) << "\n";
-            cout << "Quantidade de trocas: " << get<1>(array_teste[i + 4*x]) << "\n";
-            cout << "Quantidade de comparações: " << get<2>(array_teste[i + 4*x]) << "\n";
+        for (int i = 0; i<8; i++){
+            cout << get<0>(array_teste[i + 8*x]) << "\n";
+            cout << "Quantidade de trocas: " << get<1>(array_teste[i + 8*x]) << "\n";
+            cout << "Quantidade de comparações: " << get<2>(array_teste[i + 8*x]) << "\n";
             cout << "Tempo: " << (get<3>(array_teste[i + 4*x])).count() << "s"<< "\n\n";
         }
         tamanho = tamanho * 10; 
     }
-*/
 
+
+/*
     //PARTE INDIVIDUAL/ORIGINAL DO CÓDIGO 
 
     for(auto i=0;i<MAX;i++) array[i] = distrib(rng)%71;                         // gera números em ordem aleatória
@@ -147,7 +176,7 @@ int main(void){
     auto start = std::chrono::steady_clock::now();
     //bubblesort(array, MAX, loginfo);                                         // passa tamanho do array
     shakesort(array, MAX, loginfo); 
-    //shakesort(array, MAX, loginfo); 
+    //combsort(array, MAX, loginfo); 
     //quicksort(array, 0, MAX-1, loginfo);                                      // passa início e fim do trecho de processamento (MAX-1)
     auto finish = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = finish - start;
@@ -160,9 +189,14 @@ int main(void){
     cout << endl;
     cout << "Quantidade de trocas: " << get<0>(loginfo) << endl;
     cout << "Quantidade de comparações: " << get<1>(loginfo) << endl;
-    cout << "Tempo total: " << elapsed_seconds.count() << "s" << endl;  
+    cout << "Tempo total: " << elapsed_seconds.count() << "s" << endl; 
+
+    delete[] array; 
+*/
+
+     
     
-    delete[] array;
+    delete[] array_teste;
     return 0;
 
 
