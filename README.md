@@ -19,3 +19,24 @@ Cadeira do 3º semestre de Engenharia de Computação
  
  ➡️ ShakeSort: https://gist.github.com/ju-vargas/d1c43661810367c8a59865838fa1cc6a
 
+✳️ Seleção
+
+ ➡️ HeapSort: 
+
+✳️ Intercalação
+ 
+ ➡️ TwoWay Merge:
+ 
+ ➡️ MultiWay Merge: 
+ 
+ ➡️ MergeSort:
+ 
+✳️ Tempo Linear:
+
+ ➡️ RADIXSort:
+ 
+ ➡️ CountingSort:
+ 
+ 
+ //futuramente adicionar análise de desempenho (complexidade) e situações indicadas
+
