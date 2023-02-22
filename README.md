@@ -21,7 +21,9 @@ Cadeira do 3º semestre de Engenharia de Computação
 
 ✳️ Seleção
 
- ➡️ HeapSort: 
+ ➡️ SelectionSort: https://gist.github.com/ju-vargas/b9c7162996cdbb86f8b5aded73672f1a
+ 
+ ➡️ HeapSort: https://gist.github.com/ju-vargas/96cd6d92c896348e724762376a7af895
 
 ✳️ Intercalação
  
