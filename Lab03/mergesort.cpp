@@ -22,13 +22,15 @@ void merge_aux(array_t&, int, int, int, loginfo_t&);
 void mergesort_aux(array_t&, int, int, loginfo_t&);
 
 int main(void){
-  loginfo_t loginfo;
-  int qtd;
-  array_t array1 = {1,2,4,6,7,8,15,22};
-  array_t array2 = {1,2,3,4,5,6,7,8,25,27,35,44};
-  array_t array3, array4;
-  array_t array5 = {10,9,8,7,6,5,4,3,2,1};
+   loginfo_t loginfo;
+   int qtd;
+   array_t array1 = {1,2,4,6,7,8,15,22,23};
+   array_t array2 = {1,2,3,4,5,6,7,8,25,27,35,44};
+   array_t array3, array4;
+   array_t array5 = {1,9,8,72,64,1,1,32,1};
+   array_t array6 = {1,1,1,1,8,9,32,64,72};
 
+/*
   for(auto e:array1) cout << e << " ";  
   cout << endl;
 
@@ -49,9 +51,21 @@ int main(void){
   for(auto e:array4) cout << e << " ";  
   cout << endl;
 
-  mergesort(array5, loginfo);
-  for(auto e:array5) cout << e << " ";  
-  cout << endl;
+   for(auto e:array5) cout << e << " ";  
+      cout << endl;
+   mergesort(array5, loginfo);
+   for(auto e:array5) cout << e << " ";  
+      cout << endl;
+
+
+
+0
+*/
+
+   vector<array_t> arrays = { array1, array2, array3, array6};
+   multi_way_merge(arrays, array4, loginfo);
+   for(auto e:array4) cout << e << " ";  
+   cout << endl;
 
   // TODO: mostrar log de operações
 
@@ -88,29 +102,83 @@ void merge(const array_t& array1, const array_t& array2, array_t& array_final, l
 // Recebe uma lista de arrays e intercala-os 2 a 2
 // retorna um array com o resultado da intercalação
 void two_way_merge(const vector<array_t> arrays, array_t& array_final, loginfo_t& loginfo){   
-  // TODO:
+   // TODO: atualizar loginfo
+
+   int n = arrays.size(); 
+
+   //arrays vazio:
+   if (n == 0) {
+      return; 
+   }     
+
+   // começo colocando o primeiro array em auxiliar
+   std::vector<int> auxiliar = arrays[0];
+   std::vector<int> combinado;
+ 
+   for (int i = 1; i < n; i++ ) {   
+      //agora intercala ordenando      
+      merge(auxiliar, arrays[i], combinado, loginfo);
+
+      //substitui auxiliar pelo resultado
+      auxiliar = combinado; 
+      combinado.clear();  
+   }
+
+   //coloco o resultado em array_final
+   array_final = auxiliar; 
 }
 
-
-
-void mergesort(array_t& array, int inicio, int final, loginfo_t& loginfo){
-    int meio;     
-
-    array_t segmentoUm; 
-    array_t segmentoDois; 
-
-
-
-    meio = (inicio+final)/2;                        // divide em dois segmentos
-    mergesort(array, inicio, meio, loginfo);        // chamada recursiva primeiro segmento
-    mergesort(array, meio+1, final, loginfo);       // chamada recursiva segundo segmento
-
-    for (auto i = inicio, i )
-    merge(array, inicio, meio, fim);                // intercala duas sequencias ordenadas                
-
+void mergesort (array_t& array, loginfo_t& loginfo) {
+   // TODO: atualizar loginfo
+ 
+   int n = array.size();
+    
+   if (n < 2) {
+        return;
+    }
+   int mid = n / 2;
+   vector<int> left(array.begin(), array.begin() + mid);
+   vector<int> right(array.begin() + mid, array.end());
+   mergesort(left, loginfo);
+   mergesort(right, loginfo);
+   merge(left, right, array, loginfo);
 }
 
 // Recebe uma lista de arrays e intercala-os usando estrutura similar a heap-min
+// fiz diferente!!
 void multi_way_merge(const vector<array_t> arrays, array_t& array_final, loginfo_t& loginfo){           
-    // TODO: implementar    
+   // TODO: implementar    
+   // TODO: atualizar loginfo
+
+  
+  int n = arrays.size();
+    vector<int> idx(n, 0); // vetor de índices 
+
+    while (true) {
+        int min_element = INT_MAX;
+        int min_array_idx = -1;
+
+        // encontra o menor elemento entre os elementos atuais de cada array
+        for (int i = 0; i < n; i++) {
+            // vejo se já nao acabou o array, e se eh menor q o min elemento. se eh, atualizo
+            // o min_array_idx serve pra saber se ja acabou, pq dai nao entra aqui
+            if (idx[i] < arrays[i].size() && arrays[i][idx[i]] < min_element) { 
+                min_element = arrays[i][idx[i]];
+                min_array_idx = i;
+            }
+        }
+
+        if (min_array_idx == -1) {
+            break; // todos os elementos dos arrays já foram processados
+        }
+
+        // adiciona o menor elemento encontrado ao resultado final
+        array_final.push_back(min_element);
+
+        // atualiza o índice correspondente ao array do elemento adicionado
+        // ou seja, sobe
+        idx[min_array_idx]++;
+    }
 }
+
+
