@@ -61,11 +61,11 @@ int main(void){
 
 0
 */
-
-   vector<array_t> arrays = { array1, array2, array3, array6};
-   multi_way_merge(arrays, array4, loginfo);
-   for(auto e:array4) cout << e << " ";  
-   cout << endl;
+   for(auto e:array5) cout << e << " ";  
+      cout << endl;
+   mergesort(array5, loginfo);
+   for(auto e:array5) cout << e << " ";  
+      cout << endl;
 
   // TODO: mostrar log de operações
 
