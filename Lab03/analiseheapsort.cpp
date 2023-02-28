@@ -46,8 +46,8 @@ int main(void){
     cout << "CRESCENTE" << endl; 
 
     //array crescente de 100 elementos
-    cout << "100 elementos" << endl; 
-    for(auto i = 0; i<100; i++){
+    cout << "10 elementos" << endl; 
+    for(auto i = 0; i<1000; i++){
         array.push_back(i); 
     }
 

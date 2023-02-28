@@ -1,62 +1,79 @@
-// Counting sort in C++ programming
-
 #include <iostream>
+#include <vector>
+#include<bits/stdc++.h>
+#include<chrono>
+
 using namespace std;
 
-void countSort(int array[], int size) {
-  // The size of count must be at least the (max+1) but
-  // we cannot assign declare it as int count(max+1) in C++ as
-  // it does not support dynamic memory allocation.
-  // So, its size is provided statically.
-  int output[10];
-  int count[10];
-  int max = array[0];
+// Definições e variáveis globais necessárias
+typedef int element_t;                                                      // tipo do elemento
+typedef vector<element_t> array_t;                                          // tipo do array
+typedef tuple<int, int, std::chrono::duration<double>> loginfo_t;           // armazena informações de desempenho <trocas, comparações, tempo em ms>
 
-  // Find the largest element of the array
-  for (int i = 1; i < size; i++) {
-    if (array[i] > max)
-      max = array[i];
-  }
 
-  // Initialize count array with all zeros.
-  for (int i = 0; i <= max; ++i) {
-    count[i] = 0;
-  }
+void countingSort(vector<int>& arr, int maxVal);
 
-  // Store the count of each element
-  for (int i = 0; i < size; i++) {
-    count[array[i]]++;
-  }
 
-  // Store the cummulative count of each array
-  for (int i = 1; i <= max; i++) {
-    count[i] += count[i - 1];
-  }
-
-  // Find the index of each element of the original array in count array, and
-  // place the elements in output array
-  for (int i = size - 1; i >= 0; i--) {
-    output[count[array[i]] - 1] = array[i];
-    count[array[i]]--;
-  }
-
-  // Copy the sorted elements into original array
-  for (int i = 0; i < size; i++) {
-    array[i] = output[i];
-  }
-}
-
-// Function to print an array
-void printArray(int array[], int size) {
-  for (int i = 0; i < size; i++)
-    cout << array[i] << " ";
-  cout << endl;
-}
-
-// Driver code
 int main() {
-  int array[] = {4, 2, 2, 8, 3, 3, 1};
-  int n = sizeof(array) / sizeof(array[0]);
-  countSort(array, n);
-  printArray(array, n);
+    loginfo_t loginfo;
+    vector<int> arr(100);
+    
+
+    auto start = std::chrono::steady_clock::now();
+    auto finish = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds;
+
+    for (int i = 0; i < 100; i++) {
+        arr[i] = i + 1;
+    }
+
+    cout << "Array original: ";
+    for (int i = 0; i < arr.size(); i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+
+    start = std::chrono::steady_clock::now();
+    countingSort(arr, 100);
+    finish = std::chrono::steady_clock::now();
+    elapsed_seconds = finish - start;
+    get<2>(loginfo) = elapsed_seconds; 
+
+    cout << "tempo = " << get<2>(loginfo).count() << "ms; " << endl; 
+
+    cout << "Array ordenado: ";
+    for (int i = 0; i < arr.size(); i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
 }
+
+void countingSort(vector<int>& arr, int maxVal) {
+    vector<int> count(maxVal + 1, 0);
+    vector<int> output(arr.size(), 0);
+
+    // conta ocorrencia de cada elemento
+    for (int i = 0; i < arr.size(); i++) {
+        count[arr[i]]++;
+    }
+
+    // calcula soma
+    for (int i = 1; i < count.size(); i++) {
+        count[i] += count[i-1];
+    }
+
+    // Coloca no output de forma ordenada
+    for (int i = arr.size() - 1; i >= 0; i--) {
+        output[count[arr[i]] - 1] = arr[i];
+        count[arr[i]]--;
+    }
+
+    // Copia ordenado pro original
+    for (int i = 0; i < arr.size(); i++) {
+        arr[i] = output[i];
+    }
+}
+
