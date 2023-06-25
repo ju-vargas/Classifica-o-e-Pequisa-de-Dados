@@ -37,18 +37,20 @@ int main(){
          fullInverse[fullArraySize - i]  = fullOrder[i];
     }
 
-
+    calcForSize(fullRandom,fullOrder,fullInverse,10000000);
 
 
     //1.000
-    //calcForSize(fullRandom,fullOrder,fullInverse,1000);
+    calcForSize(fullRandom,fullOrder,fullInverse,1000);
     //10.000
-    //calcForSize(fullRandom,fullOrder,fullInverse,10000);
+    calcForSize(fullRandom,fullOrder,fullInverse,10000);
     //100.000
-    //calcForSize(fullRandom,fullOrder,fullInverse,100000);
+    calcForSize(fullRandom,fullOrder,fullInverse,100000);
     //1.000.000
     calcForSize(fullRandom,fullOrder,fullInverse,1000000);
     //10.000.000
+    calcForSize(fullRandom,fullOrder,fullInverse,10000000);
+
 
 
     return 0; 
